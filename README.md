@@ -54,3 +54,58 @@ git push -u origin main
 git commit -S -sam "set frontend assets as submodule"
 git push
 ```
+
+### Build and distribute
+
+#### Compile by yourself
+
+1. compile frontend asssets
+```shell
+cd assets
+yarn build
+cd ..
+```
+
+2. prepare frontend assets before compile backend
+```shell
+go get github.com/rakyll/statik
+statik -src=assets/dist/  -include=*.html,*.js,*.json,*.css,*.png,*.svg,*.ico -f
+```
+
+3. compile backend as executable for your platform
+```shell
+export COMMIT=$(git rev-parse --short HEAD)
+export VERSION=$(git describe --tags)
+export STAGE=release
+
+go build -a -o vig -ldflags " -X 'github.com/nekomeowww/vig/config.BackendVersion=$VERSION' -X 'github.com/nekomeowww/vig/config.LastCommit=$COMMIT' -X 'github.com/nekomeowww/vig/config.Stage=$STAGE'"
+```
+
+**NOTICE: Apple Silicon requires go 1.16 or higher to compile**
+
+#### Use script
+
+1. build frontend assets only
+```shell
+./build.sh -a
+```
+
+2. build backend only
+```shell
+export STAGE=release
+./build.sh -c
+```
+
+3. build frontend ans backend
+```shell
+export STAGE=release
+./build.sh -b
+```
+
+4. build for all supported platform
+```shell
+export STAGE=release
+./build.sh -r
+```
+
+**NOTICE: Please set your stage before running last command, or it will build a debug version of the package**
