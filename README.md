@@ -38,6 +38,8 @@ git init
 #### Use submodule for frontend
 ```shell
 git submodule add git@[YOUR GIT SSH HOST]:[YOUR FRONTEND REPO NAME].git assets
+cd assets
+git remote add origin git@[YOUR GIT SSH HOST]:[YOUR FRONTEND REPO NAME].git
 ```
 
 #### Push to your repo
