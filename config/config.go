@@ -3,9 +3,9 @@ package config
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 
+	"github.com/nekomeowww/vig/logger"
 	"gopkg.in/yaml.v2"
 )
 
@@ -36,13 +36,17 @@ type Config struct {
 func Init() {
 	content, err := ioutil.ReadFile(getFilePath())
 	if err != nil {
-		panic(err)
+		logger.Error("config file not found, host configuration defaults to http://127.0.0.1:2100")
+		Conf = &Config{
+			IP:   "127.0.0.1",
+			Port: "2100",
+		}
 	}
 
 	fmt.Println(string(content))
 	err = yaml.Unmarshal(content, &Conf)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 }
 
@@ -53,7 +57,7 @@ func getFilePath() string {
 		if os.IsNotExist(err) {
 			filePath = "./config.yml"
 		} else {
-			log.Fatal(err)
+			logger.Fatal(err)
 		}
 	}
 	stat, err = os.Stat(filePath)
@@ -61,7 +65,7 @@ func getFilePath() string {
 		if os.IsNotExist(err) {
 			return ""
 		}
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 	if !stat.IsDir() {
 		return filePath

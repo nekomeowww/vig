@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 
@@ -10,6 +9,7 @@ import (
 	"github.com/rakyll/statik/fs"
 
 	// Static Files
+	"github.com/nekomeowww/vig/logger"
 	_ "github.com/nekomeowww/vig/statik"
 )
 
@@ -17,19 +17,19 @@ import (
 func FrontendHandler() gin.HandlerFunc {
 	statikFS, err := fs.New()
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 
 	// 读取index.html
 	r, err := statikFS.Open("/index.html")
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 
 	defer r.Close()
 	contents, err := ioutil.ReadAll(r)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 
 	fileContent := string(contents)
@@ -38,13 +38,14 @@ func FrontendHandler() gin.HandlerFunc {
 		path := c.Request.URL.Path
 
 		// API 跳过
-		if strings.HasPrefix(path, "/api") || strings.HasPrefix(path, "/custom") || strings.HasPrefix(path, "/dav") || path == "/manifest.json" {
+		if strings.HasPrefix(path, "/api") || path == "/manifest.json" {
 			c.Next()
 			return
 		}
 
 		// 不存在的路径和index.html均返回index.html
-		if (path == "/index.html") || (path == "/") {
+		_, err := statikFS.Open("/" + path)
+		if (path == "/index.html") || (path == "/") || err != nil {
 			c.Header("Content-Type", "text/html")
 			c.String(200, fileContent)
 			c.Abort()
