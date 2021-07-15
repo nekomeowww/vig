@@ -37,13 +37,20 @@ git init
 
 #### Use submodule for frontend
 ```shell
-git submodule add git@[YOUR GIT SSH HOST]:[YOUR FRONTEND REPO NAME].git assets
+git rm -r --cached assets
 cd assets
+git init
+git add *
+git commit -S -sm "Init"
+git branch -M main
 git remote add origin git@[YOUR GIT SSH HOST]:[YOUR FRONTEND REPO NAME].git
+cd ..
+git submodule add git@[YOUR GIT SSH HOST]:[YOUR FRONTEND REPO NAME].git assets
+git push -u origin main
 ```
 
 #### Push to your repo
 ```shell
-git commit -S -sam "Init"
-git remote add origin git@[YOUR GIT SSH HOST]:[YOUR REPO NAME].git
+git commit -S -sam "set frontend assets as submodule"
+git push
 ```
