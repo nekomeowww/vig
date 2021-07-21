@@ -4,6 +4,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
+	"github.com/nekomeowww/vig/config"
 	"github.com/nekomeowww/vig/controllers"
 	"github.com/nekomeowww/vig/handler"
 	"github.com/nekomeowww/vig/middleware"
@@ -23,6 +24,7 @@ func InitCORS(router *gin.Engine) {
 
 // InitRouter 初始化主机模式路由
 func InitRouter() *gin.Engine {
+	gin.SetMode(config.Stage)
 	r := gin.Default()
 
 	// Static

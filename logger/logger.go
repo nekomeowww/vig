@@ -90,6 +90,10 @@ func initLogger(logger *logrus.Logger, logPath string) error {
 			if err2 != nil {
 				return err2
 			}
+			stat, err = os.Stat(logPath)
+			if err2 != nil {
+				return err2
+			}
 		} else {
 			return err
 		}
