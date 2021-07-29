@@ -1,0 +1,81 @@
+name: distribution
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    tags:
+      - v**
+  pull_request:
+    branches: [ main ]
+  release:
+    types:
+      - created
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  test:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-18.04
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    # Setup Golang
+    - uses: actions/setup-go@v1
+        with:
+          go-version: '1.16'
+      - run: go mod download
+      - run: go test -coverpkg=./...
+
+  # This workflow contains a single job called "build"
+  build:
+    needs: build-ci
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-18.04
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    # Setup Golang
+    - uses: actions/setup-go@v1
+        with:
+          go-version: '1.16'
+      - run: go mod download
+
+    # Build distribution
+    - name: Prepare for uploading dist (linux)
+      if: matrix.os == 'ubuntu-18.04'
+      run: |
+        export STAGE=release
+        ./build.sh -b
+    - name: Prepare for uploading dist (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        export STAGE=release
+        ./build.sh -b
+    - name: Prepare for uploading dist (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        export STAGE=release
+        ./build.sh -b
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: app-${{ matrix.os }}
+        path: release/
