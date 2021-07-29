@@ -17,14 +17,11 @@ jobs:
           - windows-latest
     runs-on: ${{ matrix.os }}
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-
-    # Setup Golang
+    - uses: actions/checkout@master
     - uses: actions/setup-go@v1
-        with:
-          go-version: '1.16'
-      - run: go mod download
-      - run: go test ./...
+      with:
+        go-version: '1.16' # The Go version to download (if necessary) and use.
+    - run: go mod download
+    - run: go test ./...
+      
