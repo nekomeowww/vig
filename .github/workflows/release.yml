@@ -1,0 +1,183 @@
+name: release
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on: 
+  push:
+    tags:
+      - 'v*.*.*'
+  pull_request:
+    branches: [ release ]
+  release:
+    types:
+      - created
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  frontend-test:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+      with:
+        repository: nekomeowww/Harmony-frontend
+        token: ${{ secrets.REPO_TOKEN }}
+        
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: show working directory
+      run: ls
+
+    - name: frontend test  
+      shell: bash
+      run: |
+        pwd
+        yarn
+        yarn test:unit
+        yarn build
+
+  go-test:
+    needs: frontend-test
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    # clone main repo
+    - uses: actions/checkout@master
+    # clone sub repo
+    - uses: actions/checkout@master
+      with:
+        repository: nekomeowww/Harmony-frontend
+        path: ./assets
+        token: ${{ secrets.REPO_TOKEN }}
+        
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - uses: actions/setup-go@v2
+      with:
+        go-version: '1.16'
+
+    - name: show working detail
+      run: |
+        echo ""
+        echo "Setting envirnment..."
+        export GOPATH=$(go env GOPATH)
+        export PATH=$PATH:$GOPATH/bin
+        echo ""
+        echo "Listing existed directories..."
+        echo ""
+        ls -la
+        ls -la assets
+        echo ""
+        echo "Listing go version and envirnment..."
+        echo ""
+        go version
+        go env
+
+    - name: go get statik
+      shell: bash
+      run: |
+        go get -v -u github.com/rakyll/statik
+    
+    - name: check statik
+      shell: bash
+      run: |
+        command -v statik
+
+    - name: build frontend
+      shell: bash
+      run: ./build.sh -a
+    
+    - name: test
+      shell: bash
+      run: go test ./...
+
+  build:
+    needs: go-test
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    # clone main repo
+    - uses: actions/checkout@master
+    # clone sub repo
+    - uses: actions/checkout@master
+      with:
+        repository: nekomeowww/Harmony-frontend
+        path: ./assets
+        token: ${{ secrets.REPO_TOKEN }}
+        
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - uses: actions/setup-go@v2
+      with:
+        go-version: '1.16'
+
+    - name: Show working detail
+      run: |
+        echo ""
+        echo "Setting envirnment..."
+        export GOPATH=$(go env GOPATH)
+        export PATH=$PATH:$GOPATH/bin
+        echo ""
+        echo "Listing existed directories..."
+        echo ""
+        ls -la
+        ls -la assets
+        echo ""
+        echo "Listing go version and envirnment..."
+        echo ""
+        go version
+        go env
+
+    - name: Download statik
+      shell: bash
+      run: |
+        go get -v -u github.com/rakyll/statik
+    
+    - name: Check statik
+      shell: bash
+      run: |
+        command -v statik
+
+    - name: Build frontend
+      shell: bash
+      run: ./build.sh -a
+
+    # Build distribution
+    - name: Prepare for uploading dist (linux)
+      if: matrix.os == 'ubuntu-latest'
+      shell: bash
+      run: |
+        export STAGE=release
+        ./build.sh -b
+    - name: Prepare for uploading dist (macOS)
+      if: matrix.os == 'macos-latest'
+      shell: bash
+      run: |
+        export STAGE=release
+        ./build.sh -b
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: vig-${{ matrix.os }}
+        path: release/

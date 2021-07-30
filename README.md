@@ -6,7 +6,7 @@
 
 ---
 
-### Features
+## Features
 
 1. vue3 as frontend framework
 2. gin as backend framework
@@ -17,15 +17,15 @@
 
 ---
 
-### Project preparation
+## Project preparation
 
-#### Download go mod
+### Download go mod
 ```
 go mod download
 go mod vendor
 ```
 
-#### Download frontend dependencies
+### Download frontend dependencies
 ```
 yarn
 ```
@@ -35,7 +35,7 @@ yarn
 git init
 ```
 
-#### Use submodule for frontend
+### Use submodule for frontend
 ```shell
 git rm -r --cached assets
 cd assets
@@ -49,7 +49,7 @@ git submodule add git@[YOUR GIT SSH HOST]:[YOUR FRONTEND REPO NAME].git assets
 git push -u origin main
 ```
 
-#### Push to your repo
+### Push to your repo
 ```shell
 git commit -S -sam "set frontend assets as submodule"
 git push
@@ -57,7 +57,7 @@ git push
 
 ### Build and distribute
 
-#### Compile by yourself
+### Compile by yourself
 
 1. compile frontend asssets
 ```shell
@@ -83,7 +83,7 @@ go build -a -o vig -ldflags " -X 'github.com/nekomeowww/vig/config.BackendVersio
 
 **NOTICE: Apple Silicon requires go 1.16 or higher to compile**
 
-#### Use script
+### Use script
 
 1. build frontend assets only
 ```shell
@@ -109,3 +109,14 @@ export STAGE=release
 ```
 
 **NOTICE: Please set your stage before running last command, or it will build a debug version of the package**
+
+
+## Use Github Action as CI/CD
+The workflow file is ready, you just need to adjust your project name in Line 182 in [release.yml](https://github.com/nekomeowww/vig/blob/main/.github/workflows/release.yml) where the **vig** presents.
+```
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: vig-${{ matrix.os }}
+        path: release/
+```

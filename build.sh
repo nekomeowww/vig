@@ -38,9 +38,6 @@ buildAssets () {
   yarn run build
 
   GO_VERSION=$(go version)
-  if [[ $GO_VERSION != *"1.16"* ]]; then
-    echo "It's there!"
-  fi
 
   if ! [ -x "$(command -v statik)" ]; then
     export CGO_ENABLED=0
