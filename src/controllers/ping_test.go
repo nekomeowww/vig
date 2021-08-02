@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/nekomeowww/vig/handler"
+	"github.com/nekomeowww/vig/src/handler"
 )
 
 func TestActionPing(t *testing.T) {

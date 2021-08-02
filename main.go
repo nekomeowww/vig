@@ -3,9 +3,9 @@ package main
 import (
 	"net"
 
-	"github.com/nekomeowww/vig/config"
-	"github.com/nekomeowww/vig/logger"
-	"github.com/nekomeowww/vig/router"
+	"github.com/nekomeowww/vig/src/config"
+	"github.com/nekomeowww/vig/src/logger"
+	"github.com/nekomeowww/vig/src/router"
 )
 
 func main() {

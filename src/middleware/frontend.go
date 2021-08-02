@@ -9,7 +9,7 @@ import (
 	"github.com/rakyll/statik/fs"
 
 	// Static Files
-	"github.com/nekomeowww/vig/logger"
+	"github.com/nekomeowww/vig/src/logger"
 	_ "github.com/nekomeowww/vig/statik"
 )
 

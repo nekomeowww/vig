@@ -3,8 +3,8 @@ package controllers
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/nekomeowww/vig/config"
-	"github.com/nekomeowww/vig/handler"
+	"github.com/nekomeowww/vig/src/config"
+	"github.com/nekomeowww/vig/src/handler"
 )
 
 type pingResp struct {

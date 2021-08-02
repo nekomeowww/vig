@@ -4,10 +4,11 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
-	"github.com/nekomeowww/vig/config"
-	"github.com/nekomeowww/vig/controllers"
-	"github.com/nekomeowww/vig/handler"
-	"github.com/nekomeowww/vig/middleware"
+
+	"github.com/nekomeowww/vig/src/config"
+	"github.com/nekomeowww/vig/src/controllers"
+	"github.com/nekomeowww/vig/src/handler"
+	"github.com/nekomeowww/vig/src/middleware"
 )
 
 // InitCORS 初始化跨域配置

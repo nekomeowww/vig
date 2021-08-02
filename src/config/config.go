@@ -5,8 +5,9 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/nekomeowww/vig/logger"
 	"gopkg.in/yaml.v2"
+
+	"github.com/nekomeowww/vig/src/logger"
 )
 
 var (

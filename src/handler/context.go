@@ -9,7 +9,7 @@ import (
 	"net/url"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nekomeowww/vig/config"
+	"github.com/nekomeowww/vig/src/config"
 )
 
 // CreateTestContext 创建新的测试 context

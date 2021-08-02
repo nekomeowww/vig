@@ -15,8 +15,8 @@ func TestInit(t *testing.T) {
 func TestInitLogger(t *testing.T) {
 	require := require.New(t)
 
-	err := initLogger(Log, "../logs/info.log")
+	err := initLogger(Log, "../../logs/info.log")
 	require.NoError(err)
-	err = initLogger(LogError, "../logs/error.log")
+	err = initLogger(LogError, "../../logs/error.log")
 	require.NoError(err)
 }
