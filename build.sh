@@ -145,7 +145,7 @@ _build() {
 release(){
   cd $REPO
   ## List of architectures and OS to test coss compilation.
-  SUPPORTED_OSARCH="darwin/arm64/gcc"
+  SUPPORTED_OSARCH="linux/amd64/gcc linux/arm/arm-linux-gnueabihf-gcc windows/amd64/x86_64-w64-mingw32-gcc linux/arm64/aarch64-linux-gnu-gcc darwin/arm64/gcc"
 
   echo ""
   echo "Release builds for OS/Arch/CC: ${SUPPORTED_OSARCH}"
